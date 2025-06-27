@@ -3,7 +3,10 @@ import { createList } from "./lists.js";
 import { createCard } from "./cards.js";
 import { createCheckList } from "./checklist.js";
 import { createCheckItem } from "./checkitems.js";
-import {boardId, baseUrl, apiKey, token} from "./config.js";
+import {apiKey, token} from "./config.js";
+
+const boardId = "68592ed26baa327bfc0b6f90"; // replace with your board ID
+const baseUrl = "https://api.trello.com/1/";
 
 // ---------  functions to add (lists, cards, checklists, checkitems) -------------
 
