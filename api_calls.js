@@ -5,7 +5,7 @@ import { createCheckList } from "./checklist.js";
 import { createCheckItem } from "./checkitems.js";
 import {apiKey, token} from "./config.js";
 
-const boardId = "68592ed26baa327bfc0b6f90"; // replace with your board ID
+const boardId = "967766696798798098073456"; // replace with your board ID
 const baseUrl = "https://api.trello.com/1/";
 
 // ---------  functions to add (lists, cards, checklists, checkitems) -------------
@@ -262,56 +262,61 @@ export async function deleteCheckItem(checkItemId, checkListId) {
 // -------------------------  functions for loadings --------------------------------
 
 // loading checkItems in a checklist
-async function loadingCheckitemData(checklistId) {
+async function loadingCheckitemData(checklistIds) {
   try {
+    for (let checklistId of checklistIds) {
     let rawCheckItemData = await fetch(
       `${baseUrl}checklists/${checklistId}/checkItems?key=${apiKey}&token=${token}`
     );
     let checkItems = await rawCheckItemData.json();
     for (let item of checkItems) {
-      await createCheckItem(item.name, item.state, item.id, checklistId);
-    }
+      createCheckItem(item.name, item.state, item.id, checklistId);
+    }}
   } catch (err) {
     console.log(`Error while loading check items :`, err);
   }
 }
 
 // loading checklists in a card
-async function loadingChecklistData(cardId) {
+async function loadingChecklistData(cardIds) {
   try {
-    let rawChecklistData = await fetch(
-      `${baseUrl}cards/${cardId}/checklists?key=${apiKey}&token=${token}`
-    );
-    let checklists = await rawChecklistData.json();
-
-    for (const checklist of checklists) {
-      await createCheckList(
-        checklist.name,
-        checklist.id,
-        `${cardId}-card-Data-container`
+    for (var cardId of cardIds) {
+      let rawChecklistData = await fetch(
+        `${baseUrl}cards/${cardId}/checklists?key=${apiKey}&token=${token}`
       );
-      await loadingCheckitemData(checklist.id);
+      let checklists = await rawChecklistData.json();
+      var checklistIds = checklists.map((checklist) => checklist.id);
+      for (let checklist of checklists) {
+        await createCheckList(
+          checklist.name,
+          checklist.id,
+          `${cardId}-card-Data-container`
+        );
+      }
     }
   } catch (err) {
     console.log(`Error loading checklists for card ${cardId}:`, err);
   }
+  loadingCheckitemData(checklistIds);
 }
 
 // loading cards in a list
-async function loadingCardData(listId) {
+async function loadingCardData(listIds) {
   try {
-    let rawCardsData = await fetch(
-      `${baseUrl}lists/${listId}/cards?&key=${apiKey}&token=${token}`
-    );
-    let cardsData = await rawCardsData.json();
-
-    for (const card of cardsData) {
-      await createCard(card.name, card.id, card.idList);
-      await loadingChecklistData(card.id);
+    for (var listId of listIds) {
+      let rawCardsData = await fetch(
+        `${baseUrl}lists/${listId}/cards?&key=${apiKey}&token=${token}`
+      );
+      let cardsData = await rawCardsData.json();
+      var cardIds = cardsData.map((card) => card.id);
+      for (let card of cardsData) {
+        await createCard(card.name, card.id, card.idList);
+      }
     }
   } catch (err) {
     console.log(`Error while loading cards data  ${err}`);
   }
+  loadingChecklistData(cardIds);
 }
 
 // loading lists in a board
@@ -321,11 +326,12 @@ export async function loadingListsData() {
       `${baseUrl}boards/${boardId}/lists?&key=${apiKey}&token=${token}`
     );
     let listData = await rawListsData.json();
+    var listIds = listData.map((list) => list.id);
     for (let list of listData) {
       await createList(list.name, list.id);
-      await loadingCardData(list.id);
     }
   } catch (err) {
     console.log(`Error when loading lists data ${err}`);
   }
+  return loadingCardData(listIds);
 }
