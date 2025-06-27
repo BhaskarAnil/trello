@@ -1,7 +1,6 @@
 // imports
 import {
   addNewList,
-  loadingListsData,
   updateListName,
   deleteList,
 } from "./api_calls.js";
@@ -176,4 +175,3 @@ async function createNewList() {
 
 document.getElementById("add-list").addEventListener("click", createNewList);
 
-await loadingListsData(); // load previous data

@@ -137,6 +137,9 @@ export async function createCheckList(name, checklistId, containerId) {
   checkList.appendChild(checkItemAddButton);
 
   let cardDataContainer = document.getElementById(containerId);
+    if(!cardDataContainer) {
+    return; // do not load archived data
+  }
   let addNewCheckListsOptions =
     cardDataContainer.children[cardDataContainer.children.length - 1];
 

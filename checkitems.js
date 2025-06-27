@@ -110,6 +110,9 @@ export async function createCheckItem(
   checkItemContainer.append(contentSection, options);
 
   let checklist = document.getElementById(checkListId);
+    if (!checklist) {
+    return; // do not load archived data
+  }
   checklist.append(checkItemContainer);
 }
 
