@@ -1,7 +1,7 @@
 // imports
 import {apiKey, token} from "./config.js";
 
-const boardId = "685e972897e76756c7adaa41"; // replace with your board ID
+const boardId = "68592ed26baa327bfc0b6f90"; // replace with your board ID
 const baseUrl = "https://api.trello.com/1/";
 
 // ---------  functions to add (lists, cards, checklists, checkitems) -------------

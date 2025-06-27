@@ -5,7 +5,7 @@ import { createCheckList } from "./checklist.js";
 import { createCheckItem } from "./checkitems.js";
 import { apiKey, token } from "./config.js";
 const baseUrl = "https://api.trello.com/1/"; 
-const boardId = "685e972897e76756c7adaa41"; // replace with your board ID
+const boardId = "68592ed26baa327bfc0b6f90"; // replace with your board ID
 
 async function listsData() {
     let rawListsData = await fetch(`${baseUrl}boards/${boardId}/lists?&key=${apiKey}&token=${token}`)
